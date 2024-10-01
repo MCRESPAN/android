@@ -1,0 +1,191 @@
+package com.example.themoviedb01;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.example.themoviedb01.data.PeliculasData;
+import com.example.themoviedb01.json_mapper.Movie;
+import com.example.themoviedb01.json_mapper.MovieResponse;
+import com.example.themoviedb01.retrofit.RetrofitClient;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainActivity extends AppCompatActivity {
+
+    // Botones y editText
+    private Button btnPeliculasPopulares;
+    private Button btnPeliculasPorNombre;
+    private EditText txtNombrePelicula;
+    private Button btnPeliculasPorId;
+    private EditText txtIdPelicula;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+        // PRIMER BOTÓN
+        // Inicializar el botón Peliculas Populares
+        btnPeliculasPopulares = findViewById(R.id.btnPeliculasPopulares);
+
+        // Configurar el listener de clic
+        btnPeliculasPopulares.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Aquí llamamos a la funcionalidad desarrollada abajo
+                fetchPeliculasPopulares();
+            }
+
+            // Método para hacer la solicitud de películas
+            private void fetchPeliculasPopulares() {
+                Call<MovieResponse> call = RetrofitClient.getInstance().getPopularMovies(); // Consigue la instancia del endpoint
+                call.enqueue(new Callback<MovieResponse>() {
+                    // En caso de exito
+                    @Override
+                    public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                        if (response.isSuccessful()) {  // Verifica que la respuesta sea exitosa
+                            List<Movie> movies = response.body().getResults(); // Obtiene los datos
+                            // Procesa y muestra las películas aquí
+                            for (Movie myMovie : movies) {
+                                Toast.makeText(MainActivity.this,
+                                        "Movie: " + myMovie.getTitle(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    // En caso de error
+                    @Override
+                    public void onFailure(Call<MovieResponse> call, Throwable t) {
+                        // Maneja el error aquí
+
+                    }
+                });
+            }
+        });
+        // FIN PRIMER BOTÓN
+
+
+        // SEGUNDO BOTÓN
+        // Inicializar el botón Peliculas Por Nombre y su EditText
+        Button btnPeliculasPorNombre = findViewById(R.id.btnPeliculasPorNombre);
+        EditText txtNombrePelicula = findViewById(R.id.editTextPeliculaPorNombre);
+
+        // Configurar el listener de clic
+        btnPeliculasPorNombre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Aquí llamamos a la funcionalidad desarrollada abajo
+                fetchPeliculasPorNombre();
+            }
+
+            // Método para hacer la solicitud de películas
+            private void fetchPeliculasPorNombre() {
+
+                // RECOGER LOS DATOS DE LA PELICULA en PeliculasData
+                PeliculasData.setNombre(txtNombrePelicula.getText().toString());
+                // Crear variable con la info del nombre de la pelicula
+                String nombre = PeliculasData.getNombre();
+
+                Call<MovieResponse> call = RetrofitClient.getInstance().getPeliculaNombre(nombre); // Consigue la instancia del endpoint
+                call.enqueue(new Callback<MovieResponse>() {
+                    // En caso de exito
+                    @Override
+                    public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                        if (response.isSuccessful()) {  // Verifica que la respuesta sea exitosa
+                            List<Movie> movies = response.body().getResults(); // Obtiene los datos
+                            // Procesa y muestra las películas aquí
+                            for (Movie myMovie : movies) {
+                                Toast.makeText(MainActivity.this,
+                                        "Movie: " + myMovie.getTitle(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    // En caso de error
+                    @Override
+                    public void onFailure(Call<MovieResponse> call, Throwable t) {
+                        // Maneja el error aquí
+
+                    }
+                });
+            }
+        });
+        // FIN SEGUNDO BOTÓN
+
+
+        // TERCER BOTÓN
+        // Inicializar el botón Peliculas Por Id y su EditText
+        Button btnPeliculasPorId = findViewById(R.id.btnPeliculasPorId);
+        EditText txtIdPelicula = findViewById(R.id.editTextPeliculaPorId);
+
+        // Configurar el listener de clic
+        btnPeliculasPorId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Aquí llamamos a la funcionalidad desarrollada abajo
+                fetchPeliculasPorId();
+            }
+
+            // Método para hacer la solicitud de películas
+            private void fetchPeliculasPorId() {
+
+                // RECOGER LOS DATOS DE LA PELICULA en PeliculasData
+                PeliculasData.setId(txtIdPelicula.getText().toString());
+                // Crear variable con la info del nombre de la pelicula
+                String id = PeliculasData.getId();
+
+                // Validar que el campo no este vacío (si lo está se notifica al usuario)
+                if (id.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Introduce el ID de la película", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Call<Movie> call = RetrofitClient.getInstance().getPeliculaId(id);  // De tipo Movie porque solo devolverá una pelicula (no una lista)
+                call.enqueue(new Callback<Movie>() {
+                    @Override
+                    public void onResponse(Call<Movie> call, Response<Movie> response) {
+                        if (response.isSuccessful()) {
+                            Movie movie = response.body();   // Sin el .getResults()
+                            if (movie != null) {
+                                Toast.makeText(MainActivity.this,
+                                        "Id: " + movie.getId() +
+                                                "\nMovie: " + movie.getTitle(),
+                                        Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this,
+                                        "Overview: " + movie.getOverview(),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this,
+                                    "No se encontró película con ese ID",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Movie> call, Throwable t) {
+                        Toast.makeText(MainActivity.this, "Error de conexión", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        // FIN TERCER BOTÓN
+    }
+}

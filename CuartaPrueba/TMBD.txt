@@ -1,0 +1,73 @@
+https://docs.google.com/document/d/1D7OQ6HCpGGfz1J-aR3oK1Ll5BshZDtIB/edit
+
+implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+
+public class Movie {
+    private int id;
+    private String title;
+    private String overview;
+    private String poster_path;
+
+    // Getters y Setters aquí
+}
+
+public class MovieResponse {
+    private List<Movie> results;
+
+    // Getters y Setters aquí
+}
+
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+
+/* https://api.themoviedb.org/3/movie/popular?api_key=c14748134d9cf871c4002d7a8a6a4e1e
+*/
+public interface MoviesAPI {
+    @GET("movie/popular?api_key=TU_API_KEY")
+    Call<MovieResponse> getPopularMovies();
+}
+
+
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class RetrofitClient {
+
+    private static final String BASE_URL = "https://api.themoviedb.org/3/";
+    private static MoviesAPI instance;
+
+    public static MoviesAPI getInstance() {
+        if (instance == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+            instance = retrofit.create(MoviesAPI.class);
+        }
+
+        return instance;
+    }
+}
+
+Call<MovieResponse> call = RetrofitClient.getInstance().getPopularMovies();
+call.enqueue(new Callback<MovieResponse>() {
+    @Override
+    public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+        if (response.isSuccessful()) {
+            List<Movie> movies = response.body().getResults();
+            // Procesa y muestra las películas aquí
+        }
+    }
+
+    @Override
+    public void onFailure(Call<MovieResponse> call, Throwable t) {
+        // Maneja el error aquí
+    }
+});
+
+
