@@ -166,10 +166,8 @@ public class MainActivity extends AppCompatActivity {
                             if (movie != null) {
                                 Toast.makeText(MainActivity.this,
                                         "Id: " + movie.getId() +
-                                                "\nMovie: " + movie.getTitle(),
-                                        Toast.LENGTH_LONG).show();
-                                Toast.makeText(MainActivity.this,
-                                        "Overview: " + movie.getOverview(),
+                                                "\nMovie: " + movie.getTitle() +
+                                                "\nOverview: " + movie.getOverview(),
                                         Toast.LENGTH_LONG).show();
                             }
                         } else {

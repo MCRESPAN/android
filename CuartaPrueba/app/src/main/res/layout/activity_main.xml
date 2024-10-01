@@ -7,14 +7,53 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-    <Button
-        android:id="@+id/btnPeliculasPopulares"
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Peliculas Populares" />
+        android:background="#57E0D0"
+        android:gravity="center"
+        android:padding="20dp">
+
+            <Button
+                android:id="@+id/btnPeliculasPopulares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Peliculas Populares" />
 
 
+            <EditText
+                android:id="@+id/editTextPeliculaPorNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="40dp"
+                android:ems="10"
+                android:inputType="text"
+                android:hint="Nombre de la película a buscar" />
+
+            <Button
+                android:id="@+id/btnPeliculasPorNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Buscar película" />
+
+
+            <EditText
+                android:id="@+id/editTextPeliculaPorId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="40dp"
+                android:ems="10"
+                android:inputType="text"
+                android:hint="Id de la película a buscar" />
+
+            <Button
+                android:id="@+id/btnPeliculasPorId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Buscar película" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
