@@ -1,0 +1,74 @@
+1. Crear en Beans Categorías y Productos
+2. ApiService -> poner las llamadas al back
+3. Hacer el contract
+4. Hacer el View, Presenter, Model
+5. Modificar los campos del item_row_card.xml a los que tiene productos
+6. Crear la clase SAMBA_ANDROID para el builder de las imágenes
+
+
+7. Hacer el adapter
+8. Añadir el puerto 10.0.2.2 en res/xml/network_security_config.xml
+9. En el AndroidManifest que redirija a donde se carguen las peliculas
+
+Una vez tenemos la lista de elementos funcionando, vamos con el spinner:
+10. Poner en el XML las 5 líneas del spinner en visual.
+
+
+
+
+
+11. Poner el código que nos da en el view.
+12. Detalle: poner el toString() en Categorías con return nombre;
+
+Ahora, vamos a que se carguen solo los elementos que cliquemos en el spinner:
+12 + 1. Actualizar el Adapter con la parte setProductos(...)
+14. En el View añadir el cargarProductosPorCategoria(), al cual lo llamaremos desde el código del spinner del profesor.
+15. Si queremos que al entrar no filtre el spinner y muestre todas (luego si), añadir en configurarSpinnerListener ->
+    onItemSelected: una flag justo encima en true, y dentro al principio un if isFirstSelection.
+
+
+////////////////////////
+
+
+Seguridad:
+1. Lanzar por consola los comandos para instalar las dependencias (npm install bcrypt jsonwebtoken)
+2. He puesto todo el código necesario en el back (al inicio un par de líneas, una linea con la clave secreta, en listar
+   productos un authenticateToken de argumento y debajo de todo el resto de las funciones necesarias
+
+
+////////////////////////
+
+
+AWS:
+1. Crear el RDS.
+2. Conectar el back al RDS.
+3. Subir el back a GitHub.
+4. Crear un Ubuntu.
+5. Habilitar el puerto en el SG (inbound rules: custom TCP, 3311, 0.0.0.0./0).
+6. Comandos en el EC2 abajo.
+
+
+Como crear un RDS:
+1. Postgres, free tier.
+2. Master username (postgres), contraseña.
+3. Public Access: yes.
+4. Crear un SG. Create Inbound rule: type (postgres), source (ipv4).
+5. Quitar default, poner el creado.
+
+
+Comandos para el EC2:
+sudo yum update -y
+sudo yum upgrade -y
+sudo yum install -y nodejs git
+git clone "https://github.com/MCRESPAN/android.git"
+cd carpeta back
+npm install
+sudo npm install -g pm2
+pm2 start app.js
+
+
+
+
+
+
+
